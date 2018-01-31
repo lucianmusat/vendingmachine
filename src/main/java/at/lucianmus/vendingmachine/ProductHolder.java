@@ -30,12 +30,14 @@ public class ProductHolder {
                     return true;
                 }
                 // The slot is full until the back
-                if (depth == 4 && this.frame[row][column][depth] != null)
+                if (depth == 4 && this.frame[row][column][depth] != null) {
                     System.out.println("Ding! " + this.frame[row][column][depth].name + " drops into the tray.");
                     this.frame[row][column][depth] = null;
                     return true;
+                }
             }
         }
+        System.out.println("The tray spins but nothing falls out!");
         return false;
     }
 
