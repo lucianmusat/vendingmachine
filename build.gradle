@@ -25,5 +25,16 @@ idea.project.ipr {
     }
 }
 
+jar {
+    destinationDir project.file('.')
+    manifest {
+        attributes(
+                "Class-Path": configurations.compile.collect { "lib/" + it.getName() }.join(' '),
+                "Main-Class": "at.lucianmus.vendingmachine.Main",
+                "Implementation-Version": '1.0'
+        )
+    }
+}
+
 mainClassName = 'at.lucianmus.vendingmachine.Main'
 
