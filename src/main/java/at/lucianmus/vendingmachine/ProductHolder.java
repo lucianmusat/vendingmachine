@@ -51,7 +51,7 @@ public class ProductHolder {
         Integer row = position / 5;
         Integer column = position - (5 * row);
         if (this.frame[row][column][0] != null)
-            return this.frame[row][column][0].price;
+            return this.frame[row][column][0].euroValue();
         else
             return 0.0;
     }
