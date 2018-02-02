@@ -15,13 +15,13 @@ public class ProductHolder {
         Integer row = position / 5;
         Integer column = position - (5 * row);
         if (this.frame[row][column][0] != null){
-            if (!this.frame[row][column][0].name.equals(product.name)) {
-                System.out.println("Cannot add " + product.name + " here, it already contains " + this.frame[row][column][0].name + "!");
+            if (!this.frame[row][column][0].getName().equals(product.getName())) {
+                System.out.println("Cannot add " + product.getName() + " here, it already contains " + this.frame[row][column][0].getName() + "!");
                 return;
             }
         }
         for (Integer depth = 0; depth < amount; depth++) {
-            System.out.println("Adding " + product.name + " in slot " + position);
+            System.out.println("Adding " + product.getName() + " in slot " + position);
             this.frame[row][column][depth] = product;
         }
     }
@@ -32,13 +32,13 @@ public class ProductHolder {
         if (this.frame[row][column][0] != null){
             for (Integer depth = 0; depth < 5; depth++){
                 if (this.frame[row][column][depth] == null) {
-                    System.out.println("Ding! " + this.frame[row][column][depth - 1].name + " drops into the tray.");
+                    System.out.println("Bong! " + this.frame[row][column][depth - 1].getName() + " drops into the tray.");
                     this.frame[row][column][depth -1] = null;
                     return;
                 }
                 // The slot is full until the back
                 if (depth == 4 && this.frame[row][column][depth] != null) {
-                    System.out.println("Ding! " + this.frame[row][column][depth].name + " drops into the tray.");
+                    System.out.println("Ding! " + this.frame[row][column][depth].getName() + " drops into the tray.");
                     this.frame[row][column][depth] = null;
                     return;
                 }
@@ -47,13 +47,13 @@ public class ProductHolder {
         System.out.println("The tray spins but nothing falls out!");
     }
 
-    public Double getPrice(Integer position){
+    public int getPrice(Integer position){
         Integer row = position / 5;
         Integer column = position - (5 * row);
         if (this.frame[row][column][0] != null)
-            return this.frame[row][column][0].euroValue();
+            return this.frame[row][column][0].getPrice();
         else
-            return 0.0;
+            return 0;
     }
 
 }

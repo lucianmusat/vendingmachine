@@ -5,22 +5,20 @@ package at.lucianmus.vendingmachine;
  */
 
 public class Product {
-    final public String name;
-    final public int price;
+    private final String name;
+    private final int price;
 
     Product(String name, int price) {
         this.name = name;
         this.price = price;
     }
 
-    // TODO: this should not be necessary
-    Product(String name, double price) {
-        this(name, (int) Math.round(price * 100));
+    public String getName() {
+        return name;
     }
 
-    // TODO: this should not be necessary
-    Double euroValue() {
-        return this.price * 100.0;
+    public int getPrice() {
+        return price;
     }
 
     @Override
