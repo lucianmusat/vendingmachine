@@ -40,7 +40,7 @@ public class VendingMachine {
     public void addCoins(Coin...coins){
         this.insertedMoney.addCoins(coins);
         for (Coin coin:coins)
-            this.credit += coin.getValue();
+            this.credit += coin.value;
     }
 
     public Integer getCurrentCredit(){
@@ -65,11 +65,11 @@ public class VendingMachine {
             for (Coin coin:availableMoney.getCoins().descendingKeySet()){
                 // If we actually have a coin in that slot
                 if (availableMoney.getCoins().get(coin) > 0) {
-                    Integer currentSlotCoins = coin.getValue();
+                    Integer currentSlotCoins = coin.value;
                     if (currentSlotCoins > 0) {
                         if (currentSlotCoins <= price) {
                             availableMoney.removeCoins(coin);
-                            price -= coin.getValue();
+                            price -= coin.value;
                             return giveChange(availableMoney, price);
                         }
                     }

@@ -5,20 +5,12 @@ package at.lucianmus.vendingmachine;
  */
 
 public class Product {
-    private final String name;
-    private final int price;
+    public final String name;
+    public final int price;
 
     Product(String name, int price) {
         this.name = name;
         this.price = price;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
     }
 
     @Override

@@ -6,7 +6,7 @@ package at.lucianmus.vendingmachine;
 
 public class Coin implements Comparable<Coin>{
 
-    private final int value;
+    public final int value;
 
     private Coin(int value) {
         this.value = value;
@@ -21,13 +21,9 @@ public class Coin implements Comparable<Coin>{
     static final Coin oneEuro = new Coin(100);
     static final Coin twoEuro = new Coin(200);
 
-    public int getValue() {
-        return value;
-    }
-
     @Override
-    public int compareTo(Coin c) {
-        return Integer.compare(this.value, c.getValue());
+    public int compareTo(Coin o) {
+        return Integer.compare(this.value, o.value);
     }
 
 }

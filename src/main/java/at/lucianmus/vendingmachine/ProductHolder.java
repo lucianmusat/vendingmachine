@@ -7,38 +7,40 @@ package at.lucianmus.vendingmachine;
 
 public class ProductHolder {
     // Three dimensional array to hold products
+
+    // TODO: what does this represent, cannot we do with less dimensions (1 or 2)
     private Product[][][] frame = new Product[5][5][5];
 
     ProductHolder() {}
 
-    public void addProduct(Product product, Integer position, Integer amount){
+    public void addProduct(Product product, Integer position, Integer amount) {
         Integer row = position / 5;
         Integer column = position - (5 * row);
-        if (this.frame[row][column][0] != null){
-            if (!this.frame[row][column][0].getName().equals(product.getName())) {
-                System.out.println("Cannot add " + product.getName() + " here, it already contains " + this.frame[row][column][0].getName() + "!");
+        if (this.frame[row][column][0] != null) {
+            if (!this.frame[row][column][0].name.equals(product.name)) {
+                System.out.println("Cannot add " + product.name + " here, it already contains " + this.frame[row][column][0].name + "!");
                 return;
             }
         }
         for (Integer depth = 0; depth < amount; depth++) {
-            System.out.println("Adding " + product.getName() + " in slot " + position);
+            System.out.println("Adding " + product.name + " in slot " + position);
             this.frame[row][column][depth] = product;
         }
     }
 
-    public void popProduct(Integer position){
+    public void popProduct(Integer position) {
         Integer row = position / 5;
         Integer column = position - (5 * row);
-        if (this.frame[row][column][0] != null){
+        if (this.frame[row][column][0] != null) {
             for (Integer depth = 0; depth < 5; depth++){
                 if (this.frame[row][column][depth] == null) {
-                    System.out.println("Bong! " + this.frame[row][column][depth - 1].getName() + " drops into the tray.");
+                    System.out.println("Bong! " + this.frame[row][column][depth - 1].name + " drops into the tray.");
                     this.frame[row][column][depth -1] = null;
                     return;
                 }
                 // The slot is full until the back
                 if (depth == 4 && this.frame[row][column][depth] != null) {
-                    System.out.println("Ding! " + this.frame[row][column][depth].getName() + " drops into the tray.");
+                    System.out.println("Ding! " + this.frame[row][column][depth].name + " drops into the tray.");
                     this.frame[row][column][depth] = null;
                     return;
                 }
@@ -51,7 +53,7 @@ public class ProductHolder {
         Integer row = position / 5;
         Integer column = position - (5 * row);
         if (this.frame[row][column][0] != null)
-            return this.frame[row][column][0].getPrice();
+            return this.frame[row][column][0].price;
         else
             return 0;
     }
