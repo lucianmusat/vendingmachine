@@ -1,7 +1,5 @@
 package at.lucianmus.vendingmachine;
 
-import java.util.TreeMap;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -15,8 +13,12 @@ public class Main {
         Product snickers = new Product("Snickers", 250);
         vendingMachine.addProduct(coke,0,2);
         vendingMachine.addProduct(snickers,1,1);
+
         // Try to add a product in a slot which already contains another product
         vendingMachine.addProduct(coke,1,1);
+
+        // Try to add more products than the slots can hold
+        vendingMachine.addProduct(snickers,1,7);
 
         // Try to get a product with no credit
         vendingMachine.buyProduct(0);
@@ -35,6 +37,9 @@ public class Main {
         // Buy a sold out product
         vendingMachine.addCoins(Coin.twoEuro, Coin.oneEuro);
         vendingMachine.buyProduct(1);
+
+        // Give change
+        vendingMachine.buyProduct(0);
 
     }
 

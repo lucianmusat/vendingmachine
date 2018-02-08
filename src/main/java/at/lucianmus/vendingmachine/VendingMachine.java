@@ -22,13 +22,22 @@ public class VendingMachine {
         return this.vendingMoneyStack.getTotal();
     }
 
-    public void addProduct(Product product, Integer position, Integer amount) {
+    public void addProduct(Product product, int position, int amount) {
         this.frame.addProduct(product, position, amount);
     }
 
-    public void buyProduct(Integer position){
+    public void buyProduct(int position){
+        // Is there a product in the slot we chose?
+        int price;
+        try {
+            price = this.frame.getPrice(position);
+        } catch (IllegalStateException e) {
+            System.out.println("No product currently in specified slot!");
+            return;
+        }
+
         // Do we have enough money?
-        if (this.frame.getPrice(position) <= this.getCurrentCredit()) {
+        if (price <= this.getCurrentCredit()) {
             this.credit -= (this.frame.getPrice(position));
             this.frame.popProduct(position);
             // Move funds from inserted to internal

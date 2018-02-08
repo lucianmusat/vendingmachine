@@ -1,6 +1,7 @@
 package at.lucianmus.vendingmachine;
 
-
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author Lucian on 31-1-18
@@ -10,36 +11,30 @@ public class ProductHolder {
 
     static public class Slot {
 
-        public static final int POSITIONS = 5;
+        private static final int POSITIONS = 5;
 
         // a slot has a number of POSITIONS, so it can contain
         // number of products [0..POSITIONS]. These are always stored in positions[0..numberOfProducts-1]
         private Product[] positions = new Product[POSITIONS];
 
-        public boolean inUse() {
+        boolean inUse() {
             return positions[0] != null;
         }
 
-        /*
-        public int numberOfProducts() {
-            int res = 0;
-            while (res < POSITIONS || positions[res] != null) {
-                res++;
-            }
-            return res;
-        }
-        */
-
-        public boolean isFull() {
-            return positions[POSITIONS-1] != null;
+        int freeSlots(){
+            return Math.toIntExact(Arrays.stream(positions).filter(Objects::isNull).count());
         }
 
-        public int getPrice() {
+        boolean isFull() {
+             return positions[POSITIONS-1] != null;
+        }
+
+        int getPrice() throws IllegalStateException {
             if (!inUse()) throw new IllegalStateException("not in use");
             return positions[0].price;
         }
 
-        public void addProduct(Product product) {
+        void addProduct(Product product) throws IllegalStateException {
             if (inUse() && !positions[0].name.equals(product.name)) throw new IllegalStateException("in use by another product");
             if (isFull()) throw new IllegalStateException("full");
             int i = 0;
@@ -66,50 +61,37 @@ public class ProductHolder {
 
     }
 
-    // TODO: use one-dimensional array of slots
-    private Product[][] frame = new Product[25][5];
+    private Slot[] frame = new Slot[25];
 
-    ProductHolder() {}
-
-    public void addProduct(Product product, Integer slot, Integer amount) {
-        if (this.frame[slot][0] != null) {
-            if (!this.frame[slot][0].name.equals(product.name)) {
-                System.out.println("Cannot add " + product.name + " here, it already contains " + this.frame[slot][0].name + "!");
-                return;
-            }
-        }
-        // TODO: bug: this overwrites existing stuff
-        for (Integer depth = 0; depth < amount; depth++) {
-            System.out.println("Adding " + product.name + " in slot " + slot);
-            this.frame[slot][depth] = product;
+    ProductHolder() {
+        for (int i=0; i<frame.length; i++){
+            frame[i] = new Slot();
         }
     }
 
-    public void popProduct(Integer position) {
-        if (this.frame[position][0] != null) {
-            // TODO: this can be simplified: drop first one and shift the others
-            for (Integer depth = 0; depth < 5; depth++){
-                if (this.frame[position][depth] == null) {
-                    System.out.println("Bong! " + this.frame[position][depth - 1].name + " drops into the tray.");
-                    this.frame[position][depth -1] = null;
-                    return;
-                }
-                // The slot is full until the back
-                if (depth == 4 && this.frame[position][depth] != null) {
-                    System.out.println("Ding! " + this.frame[position][depth].name + " drops into the tray.");
-                    this.frame[position][depth] = null;
+    public void addProduct(Product product, int slot, int amount) {
+        if (!frame[slot].isFull() && amount < frame[slot].freeSlots()){
+            for (int i=0; i<amount; i++) {
+                try {
+                    frame[slot].addProduct(product);
+                } catch (IllegalStateException e) {
+                    System.out.println("Cannot add " + product.name + " to slot " + slot + ", it already contains something else!");
                     return;
                 }
             }
+            System.out.println("Added " + amount + " " + product.name + " to slot " + slot);
+        } else {
+            System.out.println("Not enough space to add products!");
         }
-        System.out.println("The tray spins but nothing falls out!");
     }
 
-    public int getPrice(Integer position) {
-        if (this.frame[position][0] != null)
-            return this.frame[position][0].price;
-        else
-            return 0; // Magical value!
+    public void popProduct(int slot) {
+        frame[slot].popProduct();
+    }
+
+    public int getPrice(int slot) {
+        if (!frame[slot].inUse()) throw new IllegalStateException("No product in specified slot!");
+        return frame[slot].getPrice();
     }
 
 }
