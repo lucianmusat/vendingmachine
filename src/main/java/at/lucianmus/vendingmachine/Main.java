@@ -6,22 +6,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Money vendingMoneyStack = new Money(new TreeMap<Coin, Integer>(){{
-            put(Coin.oneCent, 10);
-            put(Coin.twoCent, 10);
-            put(Coin.fiveCent, 10);
-            put(Coin.tenCent, 10);
-            put(Coin.twentyCent, 10);
-            put(Coin.fiftyCent, 10);
-            put(Coin.oneEuro, 10);
-            put(Coin.twoEuro, 10);
-        }});
-//        Money vendingMoneyStack = new Money(null);
-
-        VendingMachine vendingMachine = new VendingMachine(vendingMoneyStack);
+        VendingMachine vendingMachine = new VendingMachine(new Money());
 
         System.out.println("Vending machine has " + vendingMachine.getTotal() + " cents");
-        System.out.println("Coins currently inside the vending machine: " + vendingMachine.getInternalCoinStack());
 
         // Supply vending machine
         Product coke = new Product("Coke", 205);
@@ -48,6 +35,7 @@ public class Main {
         // Buy a sold out product
         vendingMachine.addCoins(Coin.twoEuro, Coin.oneEuro);
         vendingMachine.buyProduct(1);
+
     }
 
 }

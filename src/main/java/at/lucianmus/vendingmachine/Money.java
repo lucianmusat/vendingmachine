@@ -1,5 +1,7 @@
 package at.lucianmus.vendingmachine;
 
+import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 
 
@@ -7,70 +9,52 @@ import java.util.TreeMap;
  * @author Lucian on 31-1-18
  */
 
-public class Money {
+public class Money implements Iterable<Map.Entry<Coin, Integer>> {
 
     private TreeMap<Coin, Integer> coins;
 
-    // TODO: bad API
-    // 1) null is 'magic'
-    // 2) taking in external references to internal maps
-    // 3) (see also) this.getCoins(), giving out references to internal datastructures
     Money(TreeMap<Coin, Integer> coins) {
-        if (coins != null)
-            this.coins = coins;
-        else
-            this.coins = new TreeMap<>();
+        this.coins = coins;
     }
 
-    // We need a non verbose method for internal use
-    // TODO: is this the best API? Do'nt we need to add/remove multiple instances of the same coin at once?
-    // that is, have some method addCoin(Coin, int)?
-    public void addCoins(Coin... coins){
-        addCoins(false, coins);
+    Money() {
+        this.coins = new TreeMap<>();
     }
 
-    // TODO: bad API, 'internal' is a bit magic, let caller do logging/stdout if needed
-    public void addCoins(boolean internal, Coin...coins){
-        for (Coin coin:coins){
-            if (!internal) {
-                if (coin.value< 100) {
-                    System.out.println("Inserting " + coin.value + " cents");
-                } else {
-                    System.out.println("Inserting " + (coin.value / 100) + " euro");
-                }
-            }
-            if (this.coins.containsKey(coin)) {
-                this.coins.put(coin, this.coins.get(coin) + 1);
-            } else {
-                this.coins.put(coin, 1);
-            }
+    public void addCoins(Coin...coins) {
+        for (Coin coin : coins) {
+            addCoin(coin);
         }
     }
 
-    // We need a non verbose method for internal use
-    public void removeCoins(Coin... coins){
-        removeCoins(false, coins);
+    public void addCoin(Coin coin) {
+        if (this.coins.containsKey(coin)) {
+            this.coins.put(coin, this.coins.get(coin) + 1);
+        } else {
+            this.coins.put(coin, 1);
+        }
     }
 
-    // TODO: bad API, what happens if we do not have enough coins?
-    public void removeCoins(boolean internal, Coin... coins){
+    public boolean removeCoins(Coin... coins) {
         for (Coin coin:coins){
-            if (this.coins.get(coin) > 0) {
-                if (!internal) {
-                    if (coin.value < 100)
-                        System.out.println("Ding! a " + coin.value + " cents coin drops into the tray.");
-                    else
-                        System.out.println("Ding! a " + (coin.value / 100) + " euro coin drops into the tray.");
-                }
-                this.coins.put(coin, this.coins.get(coin) - 1);
+            if (!removeCoin(coin)) {
+                return false;
             }
         }
+        return true;
+    }
+
+    public boolean removeCoin(Coin coin) {
+        if (this.coins.get(coin) > 0) {
+            this.coins.put(coin, this.coins.get(coin) - 1);
+            return true;
+        } else return false;
     }
 
     public Integer getTotal() {
         int total = 0;
-        for (Coin coin:this.coins.keySet()) {
-            int numberOfCoins = this.getCoins().get(coin);
+        for (Coin coin : this.coins.keySet()) {
+            int numberOfCoins = this.coins.get(coin);
             for (int i = 0; i < numberOfCoins; i++) {
                 total += coin.value;
             }
@@ -78,21 +62,33 @@ public class Money {
         return total;
     }
 
-    // TODO: see above, never hand out references to internal data structures
-    public TreeMap<Coin, Integer> getCoins() {
-        return this.coins;
+    private class AmountIterator implements Iterator<Map.Entry<Coin, Integer>> {
+        private final Iterator<Map.Entry<Coin, Integer>> tmi;
+
+        AmountIterator() {
+            tmi = Money.this.coins.descendingMap().entrySet().iterator();
+        }
+
+        public boolean hasNext() { return tmi.hasNext(); }
+        public Map.Entry<Coin, Integer> next() { return tmi.next(); }
     }
+
+
+    public Iterator<Map.Entry<Coin, Integer>> iterator() {
+        return new AmountIterator();
+    }
+
 
     @Override
     public String toString() {
         StringBuilder allCoins = new StringBuilder();
-        for (Coin coin:this.getCoins().descendingKeySet()){
-            int numberOfCoins = this.getCoins().get(coin);
-            if (numberOfCoins > 0){
+        for (Coin coin:this.coins.descendingKeySet()) {
+            int numberOfCoins = this.coins.get(coin);
+            if (numberOfCoins > 0) {
                 if (coin.value > 50) {
-                    allCoins.append(numberOfCoins).append(" ").append(coin.value / 100).append(" euro coin. ");
+                    allCoins.append(numberOfCoins).append(" {").append(coin.value / 100).append(" euro coin} ");
                 } else {
-                    allCoins.append(numberOfCoins).append(" ").append(coin.value).append(" cent coin. ");
+                    allCoins.append(numberOfCoins).append(" {").append(coin.value).append(" cent coin} ");
                 }
             }
         }

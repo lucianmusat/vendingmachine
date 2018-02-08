@@ -4,7 +4,7 @@ package at.lucianmus.vendingmachine;
  * @author Lucian on 1-2-18
  */
 
-public class Coin implements Comparable<Coin>{
+public class Coin implements Comparable<Coin> {
 
     public final int value;
 
