@@ -13,8 +13,9 @@ public class Money implements Iterable<Map.Entry<Coin, Integer>> {
 
     private TreeMap<Coin, Integer> coins;
 
-    Money(TreeMap<Coin, Integer> coins) {
-        this.coins = coins;
+    Money(Map<Coin, Integer> coins) {
+        this.coins = new TreeMap<>();
+        this.coins.putAll(coins);
     }
 
     Money() {
