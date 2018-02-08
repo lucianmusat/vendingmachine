@@ -46,7 +46,7 @@ public class Money implements Iterable<Map.Entry<Coin, Integer>> {
     }
 
     public boolean removeCoin(Coin coin) {
-        if (this.coins.get(coin) > 0) {
+        if (this.coins.containsKey(coin) && this.coins.get(coin) > 0) {
             this.coins.put(coin, this.coins.get(coin) - 1);
             return true;
         } else return false;

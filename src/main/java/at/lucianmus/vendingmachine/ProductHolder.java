@@ -70,7 +70,9 @@ public class ProductHolder {
     }
 
     public void addProduct(Product product, int slot, int amount) {
-        if (!frame[slot].isFull() && amount < frame[slot].freeSlots()){
+        if (slot<0 || slot>24) throw new IllegalStateException("No such slot!");
+        if (amount<0) throw new IllegalStateException("Illegal amount of products!");
+        if (!frame[slot].isFull() && amount <= frame[slot].freeSlots()){
             for (int i=0; i<amount; i++) {
                 try {
                     frame[slot].addProduct(product);
